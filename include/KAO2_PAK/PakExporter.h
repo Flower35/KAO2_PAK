@@ -1,3 +1,5 @@
+#ifndef H_PAK_EXPORTER
+#define H_PAK_EXPORTER
 
 #include <KAO2_PAK/ConsoleApp.h>
 
@@ -10,7 +12,7 @@ class PakExporter
 {
     public:
 
-        /*** Properties ***/
+    /*** Properties ***/
 
         std::string OutputDir;
 
@@ -26,7 +28,10 @@ class PakExporter
         std::ofstream ItemFile;
         uint8_t* Data;
 
-        /*** Methods ***/
+        std::ofstream LogFile;
+        bool SaveLog;
+
+    /*** Methods ***/
 
         bool saveItem(int32_t filesize, char* filename);
 
@@ -42,7 +47,9 @@ class PakExporter
 
         void getPakFilenameFromPath();
 
-        PakExporter(char* pak, char* directory);
+        PakExporter(char* pak, char* directory, bool log);
 
         ~PakExporter();
 };
+
+#endif

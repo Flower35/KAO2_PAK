@@ -80,10 +80,12 @@
   <ItemGroup>
     <ClCompile Include="..\source\KAO2_PAK\ConsoleApp.cpp" />
     <ClCompile Include="..\source\KAO2_PAK\PakExporter.cpp" />
+    <ClCompile Include="..\source\KAO2_PAK\PakImporter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\KAO2_PAK\ConsoleApp.h" />
     <ClInclude Include="..\include\KAO2_PAK\PakExporter.h" />
+    <ClInclude Include="..\include\KAO2_PAK\PakImporter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,4 +1,3 @@
-
 #include <KAO2_PAK/PakExporter.h>
 
 
@@ -6,7 +5,7 @@
 // PAK EXPORTER - initialize
 ////////////////////////////////////////////////////////////////
 
-PakExporter::PakExporter(char* pak, char* directory)
+PakExporter::PakExporter(char* pak, char* directory, bool log)
 {
     /* Reset data */
 
@@ -20,6 +19,8 @@ PakExporter::PakExporter(char* pak, char* directory)
 
     OutputDir = directory;
     PakName = pak;
+
+    SaveLog = log;
 }
 
 
@@ -37,6 +38,11 @@ PakExporter::~PakExporter()
     if (ItemFile.is_open())
     {
         ItemFile.close();
+    }
+
+    if (LogFile.is_open())
+    {
+        LogFile.close();
     }
 
     if (nullptr != Data)
@@ -102,10 +108,15 @@ void PakExporter::getPakFilenameFromPath()
 
 bool PakExporter::checkStreamSize(int32_t size)
 {
-    int test = BlockSizes[0];
+    int32_t test = 0;
 
-    for (int i = 1; i < (LanguagesCount + 1); i++)
+    for (int i = 0; i < (LanguagesCount + 1); i++)
     {
+        if (0 != (BlockSizes[i] % 65536))
+        {
+            return false;
+        }
+
         test += BlockSizes[i];
     }
 
@@ -171,7 +182,7 @@ bool PakExporter::openAndCheckArchive()
     PakFile.read(StreamName, 48);
 
     getPakFilenameFromPath();
-    
+
     if (0 != PakName.compare(StreamName))
     {
         std::cout << "\n [WARNING] \"StreamName\" does not match the file name!"
@@ -190,7 +201,8 @@ bool PakExporter::openAndCheckArchive()
 
     if (!checkStreamSize(size))
     {
-        std::cout << "\n [ERROR] Incorrect PAK file size!"
+        std::cout << "\n [ERROR] Incorrect PAK file size"
+            << "(or misaligned block size)!"
             << "\n";
 
         return false;
@@ -202,6 +214,32 @@ bool PakExporter::openAndCheckArchive()
         << "\n * " << StreamName
         << "\n * Output folder: \"" << OutputDir << "\""
         << "\n";
+
+    /* Try to open log file */
+
+    if (SaveLog)
+    {
+        std::string path = OutputDir + StreamName + ".log";
+
+        LogFile.open(path.c_str(), std::ios::out | std::ios::trunc);
+
+        if (!LogFile.is_open())
+        {
+            std::cout << "\n [WARNING] Cannot create this file:"
+                << "\n * \"" << path << "\""
+                << "\n";
+
+            SaveLog = false;
+        }
+        else
+        {
+            std::cout << " * Log file: \"" << path << "\""
+                << "\n";
+
+            LogFile << "STREAM: " << StreamName << "\n"
+                << "FOLDER: " << OutputDir << "\n";
+        }
+    }
 
     return true;
 }
@@ -222,6 +260,12 @@ bool PakExporter::exportArchive()
     std::cout << "\n Extracting archive..."
         << "\n";
 
+    if (SaveLog)
+    {
+        LogFile << "\n -tate"
+            << "\n";
+    }
+
     PakFile.seekg(0x80);
 
     if (!exportItemBlock(end_offset, 0, main_sector_last_item))
@@ -235,6 +279,12 @@ bool PakExporter::exportArchive()
     {
         std::cout << "\n -lang=" << Languages[i]
             << "\n";
+
+        if (SaveLog)
+        {
+            LogFile << "\n -lang=" << Languages[i]
+                << "\n";
+        }
 
         PakFile.seekg(end_offset);
         end_offset += BlockSizes[i + 1];
@@ -354,8 +404,13 @@ bool PakExporter::saveItem(int32_t filesize, char* filename)
 
     std::cout << filename << "\n";
 
+    if (SaveLog)
+    {
+        LogFile << filename << "\n";
+    }
+
     /* Try to allocate memory for this item */
-    
+
     if (nullptr != Data)
     {
         delete[](Data);
