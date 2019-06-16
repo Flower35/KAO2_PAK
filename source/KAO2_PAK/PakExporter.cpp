@@ -14,6 +14,7 @@ PakExporter::PakExporter(char* pak, char* directory, bool log)
     LanguagesCount = 0;
     std::memset(Languages, 0x00, sizeof(Languages));
     std::memset(BlockSizes, 0x00, sizeof(BlockSizes));
+    Data = nullptr;
 
     /* Save paths */
 

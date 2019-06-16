@@ -14,6 +14,7 @@ PakImporter::PakImporter(char* log)
     std::memset(Languages, 0x00, sizeof(Languages));
     std::memset(BlockSizes, 0x00, sizeof(BlockSizes));
     std::memset(ItemsCount, 0x00, sizeof(ItemsCount));
+    Data = nullptr;
 
     /* Save file path */
 
