@@ -3,6 +3,7 @@
 
 int main(int argc, char** argv)
 {
+	SetConsoleTitle(TEXT("Kao-2 Unpacker"));
     std::string common_path;
     std::string answer;
     bool test = false;
@@ -72,6 +73,8 @@ int main(int argc, char** argv)
 
             /* Iterate through every argument */
 
+			SetConsoleTitle(TEXT("Kao-2 Unpacker - Unpacking..."));
+
             for (int i = 1; (i < argc) && no_errors; i++)
             {
                 std::cout << "\n --------------------------------"
@@ -98,6 +101,8 @@ int main(int argc, char** argv)
 
             /* Iterate through every argument */
 
+			SetConsoleTitle(TEXT("Kao-2 Unpacker - Repacking..."));
+
             for (int i = 1; (i < argc) && no_errors; i++)
             {
                 std::cout << "\n --------------------------------"
@@ -121,7 +126,7 @@ int main(int argc, char** argv)
     }
 
     /* The end :) */
-
+	SetConsoleTitle(TEXT("Kao-2 Unpacker - Finished!"));
     std::cout << "\n --------------------------------"
         << "\n (press any key to close)"
         << "\n";
