@@ -97,8 +97,6 @@ void PakExporter::getPakFilenameFromPath()
     if (OutputDir.length() <= 0)
     {
         OutputDir = temp.substr(0, c1 > c2 ? c1 : c2) + PakName + '\\';
-
-        _mkdir(OutputDir.c_str());
     }
 }
 
@@ -217,6 +215,8 @@ bool PakExporter::openAndCheckArchive()
         << "\n";
 
     /* Try to open log file */
+    
+    _mkdir(OutputDir.c_str());
 
     if (SaveLog)
     {

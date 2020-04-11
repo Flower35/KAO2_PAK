@@ -3,7 +3,6 @@
 
 int main(int argc, char** argv)
 {
-    SetConsoleTitle(TEXT("Kao-2 Unpacker"));
     std::string common_path;
     std::string answer;
     bool test = false;
@@ -126,7 +125,9 @@ int main(int argc, char** argv)
     }
 
     /* The end :) */
+
     SetConsoleTitle(TEXT("Kao-2 Unpacker - Finished!"));
+
     std::cout << "\n --------------------------------"
         << "\n (press any key to close)"
         << "\n";
